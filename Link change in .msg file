@@ -1,0 +1,22 @@
+from bs4 import BeautifulSoup
+from aspose.email.mapi import MapiMessage
+
+def change_link(file_path):
+    
+    msg = MapiMessage.from_file(file_path)
+
+    html_body = msg.body_html
+    msg.body= html_body.replace(old_link, new_link)
+    
+    soup = BeautifulSoup(msg.body_html, 'html.parser')
+    
+    if soup.findAll('a') is not None:
+        for a in soup.findAll('a'):
+            if a.string is not None:
+                print("a.string is not None")
+                if old_string in a.string:
+                    a['href'] = a['href'].replace(old_link, new_link)
+    html_body = str(soup)
+    msg.body = html_body
+    
+    msg.save(file_path)
